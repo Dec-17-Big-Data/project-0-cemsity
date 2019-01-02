@@ -9,6 +9,8 @@ public interface UserDao {
 	Optional<List<User>> getAllUsers();
 	Optional<User> getUserByName(String userName);
 	Optional<User> getUserById(Integer userId);
-	
+	boolean newUser(User user);
+	boolean updateUser(User user);
+	boolean deleteUser(User user);
 	
 }

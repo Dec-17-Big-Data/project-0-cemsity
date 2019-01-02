@@ -12,7 +12,7 @@ public class User implements Serializable{
 	private String userPassword;
 	private String userFirstName;
 	private String userLastName;
-	private Boolean isSuper;
+	private boolean loggedIn;
 	
 	
 	
@@ -20,15 +20,14 @@ public class User implements Serializable{
 		super();
 	}
 	
-	public User(Integer userId, String userName, String userPassword, String userFirstName, String userLastName,
-			Boolean isSuper) {
+	public User(Integer userId, String userName, String userPassword, String userFirstName, String userLastName) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
 		this.userPassword = userPassword;
 		this.userFirstName = userFirstName;
 		this.userLastName = userLastName;
-		this.isSuper = isSuper;
+		
 	}
 	public Integer getUserId() {
 		return userId;
@@ -60,18 +59,19 @@ public class User implements Serializable{
 	public void setUserLastName(String userLastName) {
 		this.userLastName = userLastName;
 	}
-	public Boolean getIsSuper() {
-		return isSuper;
-	}
-	public void setIsSuper(Boolean isSuper) {
-		this.isSuper = isSuper;
+	
+	public boolean isLoggedIn() {
+		return loggedIn;
 	}
 
-	@Override
+	public void setLoggedIn(boolean loggedIn) {
+		this.loggedIn = loggedIn;
+	}
+	
+	@Override 
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((isSuper == null) ? 0 : isSuper.hashCode());
 		result = prime * result + ((userFirstName == null) ? 0 : userFirstName.hashCode());
 		result = prime * result + ((userId == null) ? 0 : userId.hashCode());
 		result = prime * result + ((userLastName == null) ? 0 : userLastName.hashCode());
@@ -89,11 +89,6 @@ public class User implements Serializable{
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
-		if (isSuper == null) {
-			if (other.isSuper != null)
-				return false;
-		} else if (!isSuper.equals(other.isSuper))
-			return false;
 		if (userFirstName == null) {
 			if (other.userFirstName != null)
 				return false;
@@ -125,8 +120,10 @@ public class User implements Serializable{
 	@Override
 	public String toString() {
 		return "User [userId=" + userId + ", userName=" + userName + ", userPassword=" + userPassword
-				+ ", userFirstName=" + userFirstName + ", userLastName=" + userLastName + ", isSuper=" + isSuper + "]";
+				+ ", userFirstName=" + userFirstName + ", userLastName=" + userLastName +"]";
 	}
+
+	
 	
 	
 }

@@ -14,7 +14,7 @@ public class ConnectionUtil {
 
   private ConnectionUtil(){} //Singleton
 
-  public Connection getConnection() {
+  public static Connection getConnection() {
     log.traceEntry();
     if (connect != null){
       return ConnectionUtil.connect;

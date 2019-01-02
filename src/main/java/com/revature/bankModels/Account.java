@@ -16,6 +16,14 @@ public class Account implements Serializable{
 		super();
 	}
 
+	public Account(Integer accountId, Integer userID, String type, Integer amount) {
+		super();
+		this.accountId = accountId;
+		this.userID = userID;
+		this.type = type;
+		this.amount = amount;
+	}
+
 	public Integer getAccountId() {
 		return accountId;
 	}
