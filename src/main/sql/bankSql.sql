@@ -78,11 +78,7 @@ create table transactions (
     CHECK (transaction_ammount > 0)
 );
 
-create table super_users (
-    super_user_ID number(10) NOT NULL PRIMARY KEY,
-    super_user_name varchar(255) not null unique,
-    super_user_password varchar(255) not null
-);
+
 
 /***************************************
 * SEQUENCES
@@ -138,11 +134,11 @@ begin
 end;
 /
 
-CREATE OR REPLACE PROCEDURE new_account (userID IN NUMBER, type in varchar)
+CREATE OR REPLACE PROCEDURE new_account (user_ID IN NUMBER, acc_Type in varchar)
 IS
 BEGIN
     INSERT into accounts (account_id, user_id, account_type, account_ammount)
-    values (seq_acc.nextval, userID, type, 0);
+    values (seq_acc.nextval, user_ID, acc_Type, 0);
     commit;
 END;
 /
