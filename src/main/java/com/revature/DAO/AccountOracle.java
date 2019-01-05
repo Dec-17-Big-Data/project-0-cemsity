@@ -248,8 +248,30 @@ public class AccountOracle implements AccountDao{
 
 	@Override
 	public boolean deleteAccount(Account account) {
-		// TODO Auto-generated method stub
-		return false;
+		log.traceEntry();
+		Connection con = ConnectionUtil.getConnection();
+		
+		if (con == null) {
+			log.traceExit(false);
+			return false;
+		}
+		
+		try {
+			String sql = "call delete_account(?)";
+			CallableStatement cs = con.prepareCall(sql);
+			
+			cs.setInt(1, account.getUserID());
+			
+			boolean result = cs.execute();
+			
+			log.traceExit(result);
+			return result;
+		} catch (Exception e){
+			log.catching(e);
+			log.error("SQL Exception occured.", e);
+		}
+		log.traceExit(false);
+		return false;		
 	}
 
 	

@@ -20,7 +20,7 @@ public class ConnectionUtil {
       return ConnectionUtil.connect;
     }
     Properties props = new Properties();
-    try (InputStream in = new FileInputStream("./../../../../resources/connection.properties");) {
+    try (InputStream in = new FileInputStream("src\\main\\resources\\connections.properties");) {
     	props.load(in);
     } catch (FileNotFoundException e) {
 		log.error(e);

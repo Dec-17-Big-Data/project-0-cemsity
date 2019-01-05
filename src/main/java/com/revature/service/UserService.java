@@ -45,24 +45,30 @@ public class UserService {
 	}
 	
 	public User loginUser(String userName, String password) throws InvalidPasswordException {
-		
+		log.traceEntry();
 		User user = this.getUserByName(userName);
 		
-		if (user == null) {
-			this.signUpUser(userName, password);
-		}
-		if (user.getUserPassword() == password) {
-			user.setLoggedIn(true);
-		} else {
+		if (!user.getUserPassword().equals(password)) {
 			throw new InvalidPasswordException();
-		}
+		} 
 		
+		log.traceExit(user);
 		return user;
 		
 	}
+	public User logoutUser(User user) {
+		user.setLoggedIn(false);
+		return user;
+	}
 	
-	public User signUpUser(String userName, String password) throws IllegalArgumentException{
-		
+	public User newUser(String userName, String password, String firstName, String lastName) throws IllegalArgumentException{
+		log.traceEntry();
+		User user = new User(userName, password, firstName, lastName );
+		boolean worked = userDao.newUser(user);
+		if (worked) {
+			user = this.getUserByName(userName);
+			return user;
+		}
 		return null;
 	}
 	

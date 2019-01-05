@@ -46,9 +46,10 @@ public class UserOracle implements UserDao{
 			while(rs.next()) {
 				listOfUsers.add(new User(rs.getInt("user_id"),
 						rs.getString("user_name"),
+						rs.getString("user_password"),
 						rs.getString("user_first"),
-						rs.getString("user_last"),
-						rs.getString("user_password")
+						rs.getString("user_last")
+						
 						));
 			}
 			log.traceExit(Optional.of(listOfUsers));
@@ -82,9 +83,9 @@ public class UserOracle implements UserDao{
 			while(rs.next()) {
 				user = new User(rs.getInt("user_id"),
 						rs.getString("user_name"),
+						rs.getString("user_password"),
 						rs.getString("user_first"),
-						rs.getString("user_last"),
-						rs.getString("user_password")
+						rs.getString("user_last")
 						);
 			}
 			log.traceExit(Optional.of(user));
@@ -119,9 +120,9 @@ public class UserOracle implements UserDao{
 			while(rs.next()) {
 				user = new User(rs.getInt("user_id"),
 						rs.getString("user_name"),
+						rs.getString("user_password"),
 						rs.getString("user_first"),
-						rs.getString("user_last"),
-						rs.getString("user_password")
+						rs.getString("user_last")
 						);
 			}
 			log.traceExit(Optional.of(user));
@@ -170,7 +171,7 @@ public class UserOracle implements UserDao{
 			return false;
 		}
 		try {
-			String call = "CALL new_user(?,?,?,?)";
+			String call = "CALL update_user(?,?,?,?)";
 			CallableStatement cs = con.prepareCall(call);
 			cs.setString(1, user.getUserName());
 			cs.setString(2, user.getUserFirstName());

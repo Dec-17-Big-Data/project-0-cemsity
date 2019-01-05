@@ -1,6 +1,7 @@
 package com.revature.bankModels;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class User implements Serializable{
 	/**
@@ -13,6 +14,7 @@ public class User implements Serializable{
 	private String userFirstName;
 	private String userLastName;
 	private boolean loggedIn;
+	private List<Account> accounts;
 	
 	
 	
@@ -29,6 +31,14 @@ public class User implements Serializable{
 		this.userLastName = userLastName;
 		
 	}
+	public User( String userName, String userPassword, String userFirstName, String userLastName) {
+		super();
+		this.userName = userName;
+		this.userPassword = userPassword;
+		this.userFirstName = userFirstName;
+		this.userLastName = userLastName;
+	}
+	
 	public Integer getUserId() {
 		return userId;
 	}
@@ -119,8 +129,20 @@ public class User implements Serializable{
 
 	@Override
 	public String toString() {
+		
 		return "User [userId=" + userId + ", userName=" + userName + ", userPassword=" + userPassword
 				+ ", userFirstName=" + userFirstName + ", userLastName=" + userLastName +"]";
+	}
+
+	public List<Account> getAccounts() {
+		return accounts;
+	}
+
+	public void setAccounts(List<Account> accounts) {
+		this.accounts = accounts;
+	}
+	public void addAccount(Account account) {
+		this.accounts.add(account);
 	}
 
 	
