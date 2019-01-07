@@ -165,6 +165,7 @@ public class AccountOracle implements AccountDao{
 		
 		if (con == null) {
 			log.traceExit(false);
+			log.trace("connection null");
 			return false;
 		}
 		

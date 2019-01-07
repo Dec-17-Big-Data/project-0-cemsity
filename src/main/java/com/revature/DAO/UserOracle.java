@@ -150,10 +150,10 @@ public class UserOracle implements UserDao{
 			cs.setString(3, user.getUserLastName());
 			cs.setString(4, user.getUserPassword());
 			
-			boolean result = cs.execute();
+			cs.execute();
 			
-			return result;
-			
+			log.traceExit(true);
+			return true;
 			
 		} catch (Exception e) {
 			log.catching(e);
@@ -171,16 +171,17 @@ public class UserOracle implements UserDao{
 			return false;
 		}
 		try {
-			String call = "CALL update_user(?,?,?,?)";
+			String call = "CALL update_user(?,?,?,?,?)";
 			CallableStatement cs = con.prepareCall(call);
-			cs.setString(1, user.getUserName());
-			cs.setString(2, user.getUserFirstName());
-			cs.setString(3, user.getUserLastName());
-			cs.setString(4, user.getUserPassword());
+			cs.setString(1, Integer.toString(user.getUserId()));
+			cs.setString(2, user.getUserName());
+			cs.setString(3, user.getUserFirstName());
+			cs.setString(4, user.getUserLastName());
+			cs.setString(5, user.getUserPassword());
 			
-			boolean result = cs.execute();
-			
-			return result;
+			cs.execute();
+			log.traceExit(true);
+			return true;
 			
 			
 		} catch (Exception e) {
@@ -203,9 +204,9 @@ public class UserOracle implements UserDao{
 			CallableStatement cs = con.prepareCall(call);
 			cs.setLong(1, user.getUserId());
 			
-			boolean result = cs.execute();
-			
-			return result;
+			cs.execute();
+			log.traceExit(true);
+			return true;
 			
 			
 		} catch (Exception e) {

@@ -1,5 +1,6 @@
 package com.revature.service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -56,20 +57,58 @@ public class UserService {
 		return user;
 		
 	}
-	public User logoutUser(User user) {
-		user.setLoggedIn(false);
-		return user;
-	}
-	
-	public User newUser(String userName, String password, String firstName, String lastName) throws IllegalArgumentException{
+		
+	public User newUser(String userName, String password, String firstName, String lastName) throws UserNameExistsException{
 		log.traceEntry();
 		User user = new User(userName, password, firstName, lastName );
 		boolean worked = userDao.newUser(user);
 		if (worked) {
 			user = this.getUserByName(userName);
+			log.traceExit(user);
 			return user;
+		} else {
+			throw new UserNameExistsException();
+			
 		}
+	}
+	
+	public List<User> getAllUsers() {
+		log.traceEntry();
+		
+		Optional<List<User>> optList = userDao.getAllUsers();
+		List<User> listUser = null;
+		try {
+			listUser = optList.get();
+			log.traceExit(listUser);
+			return listUser;
+		} catch (Exception e){
+			log.catching(e);
+			
+			
+		}
+		
 		return null;
+	};
+	
+	public User updateUser(User user) {
+		log.traceEntry();
+		boolean worked = userDao.updateUser(user);
+		if (worked) {
+			user = this.getUserByName(user.getUserName());
+			log.traceExit(user);
+			return user;
+		} 
+		return null;
+	}
+	
+	public boolean deleteUser(User user) {
+		log.traceEntry();
+		boolean worked = userDao.deleteUser(user);
+		if (worked) {
+			log.traceExit(worked);
+			return worked;
+		}
+		return false;
 	}
 	
 	
