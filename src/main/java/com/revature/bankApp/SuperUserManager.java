@@ -1,8 +1,13 @@
 package com.revature.bankApp;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
@@ -32,12 +37,30 @@ public class SuperUserManager {
 	public void endSuperUser() {
 		sum = null;
 	}
-	
+	public boolean login(Scanner in) {
+		System.out.println("SuperUser login");
+		System.out.print("Username: ");
+		String username = in.nextLine();
+		System.out.print("Password:");
+		String password = in.nextLine();
+		Properties props = new Properties();
+	    try (InputStream inSt = new FileInputStream("src\\main\\resources\\connections.properties");) {
+	    	props.load(inSt);
+	    } catch (FileNotFoundException e) {
+			log.error(e);
+		} catch (IOException e) {
+			log.error(e);
+		}
+	    String propUsername = props.getProperty("superuser.username");
+		String propPassword = props.getProperty("superuser.password");
+		return (username.equals(propUsername) && password.equals(propPassword));
+	}
 	public List<User> getAllUsers(){
 		return usrSer.getAllUsers();
 	}
 	
 	public void printUsers() {
+		users = getAllUsers();
 		System.out.printf("%-10s|%-15s|%-20s|%-15s|%-15s\n", "User ID", "User Name","Password", "First Name", "Last Name");
 		for(User user : users) {
 			System.out.printf("%-10d|%-15s|%-20s|%-15s|%-15s\n", user.getUserId(), user.getUserName(), user.getUserPassword(), user.getUserFirstName(), user.getUserLastName());
@@ -52,6 +75,7 @@ public class SuperUserManager {
 		Map<Integer, User> mapUsr = listToMap(users);
 		
 		User user = null;
+		this.printUsers();
 		user: while(true) {
 			System.out.println("Plese choose a User to Edit. (Choose by User ID)");
 			int choice = 0;
@@ -155,6 +179,7 @@ public class SuperUserManager {
 		Map<Integer, User> mapUsr = listToMap(users);
 		
 		User user = null;
+		this.printUsers();
 		user: while(true) {
 			System.out.println("Plese choose a User to Delete. (Choose by User ID)");
 			int choice = 0;
@@ -204,6 +229,8 @@ public class SuperUserManager {
 		}
 		this.users = this.getAllUsers();
 	}
+	
+	
 	
 	public Map<Integer, User> listToMap(List<User> users) {
     	

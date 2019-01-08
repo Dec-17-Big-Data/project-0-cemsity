@@ -40,9 +40,11 @@ public class ConnectionUtil {
 		
 	try {
 		con = DriverManager.getConnection(endpoint, username, password);
+		
 		return con;
 	} catch (SQLException e) {
-		log.error(e);
+		log.catching(e);
+		log.error("Sql Exception",e);
 	}
 	
 	return null;

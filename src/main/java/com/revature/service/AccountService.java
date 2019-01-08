@@ -69,8 +69,12 @@ public class AccountService {
 	}
 	
 	public boolean deposit(Account account, Integer ammount) {
-		
-		boolean worked = accountDao.deposit(account, ammount);
+		log.traceEntry();
+		boolean worked = false;
+		if (ammount >= 0) { 
+			worked = accountDao.deposit(account, ammount);
+		}
+		log.traceExit(worked);
 		return worked;
 	}
 	public boolean withdraw(Account account, Integer ammount) throws InsufficientBalanceException {

@@ -1,5 +1,5 @@
 /*******************************************************************************
-   Chinook Database - Version 1.4
+   JDBCBank Database - Version 1.0
    Script: bankSql
    Description: Creates and populates the JDBC bank app.
    DB Server: Oracle
@@ -9,28 +9,28 @@
 
 /*******************************************************************************
    Drop database if it exists
---********************************************************************************/
---DROP USER bankAdmin CASCADE;
---
---
---/*******************************************************************************
---   Create database
---********************************************************************************/
---CREATE USER bankAdmin
---IDENTIFIED BY
---DEFAULT TABLESPACE users
---TEMPORARY TABLESPACE temp
---QUOTA 10M ON users;
---
---GRANT connect to bankAdmin;
---GRANT resource to bankAdmin;
---GRANT create session TO bankAdmin;
---GRANT create table TO bankAdmin;
---GRANT create view TO bankAdmin;
---
---
---
---conn bankAdmin/
+********************************************************************************/
+DROP USER bankAdmin CASCADE;
+
+
+/*******************************************************************************
+  Create database
+********************************************************************************/
+CREATE USER bankAdmin
+IDENTIFIED BY JBDCPassword
+DEFAULT TABLESPACE users
+TEMPORARY TABLESPACE temp
+QUOTA 10M ON users;
+
+GRANT connect to bankAdmin;
+GRANT resource to bankAdmin;
+GRANT create session TO bankAdmin;
+GRANT create table TO bankAdmin;
+GRANT create view TO bankAdmin;
+
+
+
+conn bankAdmin/JBDCPassword
 
 
 -- ADD CONTRANTS AND OTHER
@@ -111,8 +111,8 @@ CREATE OR REPLACE PROCEDURE new_user(
     last IN varchar,
     password in varchar
 )
-    IS 
-    BEGIN 
+    IS
+    BEGIN
         insert into users(user_id, user_name, user_first, user_last, user_password)
         values (seq_user.nextval, name, first, last, password);
         commit;
@@ -120,17 +120,19 @@ CREATE OR REPLACE PROCEDURE new_user(
 /
 
 CREATE OR REPLACE PROCEDURE update_user (userId IN number, name IN varchar, first IN varchar, last IN varchar, password in varchar)
-IS 
+IS
 BEGIN
     update users
     set user_name = name, user_first = first, user_last = last, user_password = password
     where user_id = userId;
+    commit;
 END;
 /
 CREATE OR REPLACE PROCEDURE delete_user (userId in number)
-is 
+is
 begin
     DELETE FROM users where user_id = userId;
+    commit;
 end;
 /
 
@@ -145,42 +147,42 @@ END;
 
 CREATE OR REPLACE PROCEDURE new_transaction (acc1 in number, acc2 in number, ammount in number, tran_type in varchar)
 IS
-BEGIN 
+BEGIN
     insert into transactions(transaction_id, account1_id, account2_id, transaction_ammount, transaction_type)
     values (seq_trans.nextval, acc1, acc2, ammount, tran_type);
     commit;
 END;
 /
 
-    
+
 
 CREATE OR REPLACE PROCEDURE deposit (accId IN number, ammount in number)
 IS
     acc_ammount number(10);
-    cursor c1 is 
+    cursor c1 is
         select account_ammount
-        from accounts 
+        from accounts
         where account_id = accId;
     neg_number EXCEPTION;
 BEGIN
     open c1;
     fetch c1 into acc_ammount;
     close c1;
-    
-    if ammount > 0 THEN 
+
+    if ammount > 0 THEN
         update accounts
         set account_ammount = (acc_ammount + ammount)
-        where account_id = accId; 
-        new_transaction (accId, null, ammount, 'deposit'); 
+        where account_id = accId;
+        new_transaction (accId, null, ammount, 'deposit');
         commit;
     else
         raise neg_number;
     end if;
-    
+
     EXCEPTION
-        WHEN neg_number THEN 
+        WHEN neg_number THEN
             raise_application_error (-20001, 'Can not accept a negative number');
-        when OTHERS then 
+        when OTHERS then
             raise_application_error (-20002, 'An error has hapened while depositing');
 END;
 /
@@ -188,30 +190,30 @@ END;
 CREATE OR REPLACE PROCEDURE withdraw (accId IN number, ammount in number)
 IS
     acc_ammount number(10);
-    cursor c1 is 
+    cursor c1 is
         select account_ammount
-        from accounts 
+        from accounts
         where account_id = accId;
     neg_number EXCEPTION;
 BEGIN
     open c1;
     fetch c1 into acc_ammount;
     close c1;
-    
-    if ammount > 0 THEN 
+
+    if ammount > 0 THEN
         update accounts
         set account_ammount = (acc_ammount - ammount)
-        where account_id = accId; 
+        where account_id = accId;
         new_transaction(accId, null, ammount, 'withdraw');
         commit;
     else
         raise neg_number;
     end if;
-    
+
     EXCEPTION
-        WHEN neg_number THEN 
+        WHEN neg_number THEN
             raise_application_error (-20003, 'Can not accept a negative number');
-        when OTHERS then 
+        when OTHERS then
             raise_application_error (-20004, 'An error has hapened while withdrawing');
 END;
 /
@@ -221,17 +223,17 @@ CREATE OR REPLACE PROCEDURE transfer (accId1 IN number, accId2 IN number, ammoun
 IS
     acc1_ammount number(10);
     acc2_ammount number(10);
-    
-    cursor c1 is 
+
+    cursor c1 is
         select account_ammount
-        from accounts 
+        from accounts
         where account_id = accId1;
-        
-    cursor c2 is 
+
+    cursor c2 is
         select account_ammount
-        from accounts 
+        from accounts
         where account_id = accId2;
-        
+
     neg_number EXCEPTION;
 BEGIN
     open c1;
@@ -240,31 +242,70 @@ BEGIN
     open c2;
     fetch c2 into acc2_ammount;
     close c2;
-    
-    if ammount > 0 THEN 
+
+    if ammount > 0 THEN
         update accounts
         set account_ammount = (acc1_ammount - ammount)
-        where account_id = accId1; 
-        
+        where account_id = accId1;
+
         update accounts
         set account_ammount = (acc2_ammount + ammount)
-        where account_id = accId2; 
-        
+        where account_id = accId2;
+
         new_transaction(accId1, accId2, ammount, 'transfer');
         commit;
     else
         raise neg_number;
     end if;
-    
+
     EXCEPTION
-        WHEN neg_number THEN 
+        WHEN neg_number THEN
             raise_application_error (-20005, 'Can not accept a negative number');
-        when OTHERS then 
+        when OTHERS then
             raise_application_error (-20006, 'An error has hapened while transfering');
 END;
 /
 
+create or replace PROCEDURE delete_account (acc_id IN number)
+IS
+BEGIN
+    delete from accounts where account_id = acc_id ;
+    commit;
+END;
+/
+/*********************
+* BUILD THE DATABASE
+*********************/
+insert into users(user_ID, user_name, user_first, user_last, user_password) values( seq_user.nextval, 'mario','mario','plumber','itsame!');
+insert into users(user_ID, user_name, user_first, user_last, user_password) values( seq_user.nextval, 'luigi','luigi','plumber','runaway!');
+insert into users(user_ID, user_name, user_first, user_last, user_password) values( seq_user.nextval, 'blublur','sonic','hedgehog','runfast!');
+insert into users(user_ID, user_name, user_first, user_last, user_password) values( seq_user.nextval,'tails', 'miles', 'prower', 'flyhigher');
+insert into users(user_ID, user_name, user_first, user_last, user_password) values( seq_user.nextval, 'solidSnake', 'solid', 'snake', 'metalgear');
 
+insert into accounts(account_id,user_id, account_type, account_ammount) values (seq_acc.nextval, 1,'Savings', 1000);
+insert into accounts(account_id,user_id, account_type, account_ammount) values (seq_acc.nextval, 2,'Savings', 1000);
+insert into accounts(account_id,user_id, account_type, account_ammount) values (seq_acc.nextval, 3,'Savings', 1000);
+insert into accounts(account_id,user_id, account_type, account_ammount) values (seq_acc.nextval, 4,'Savings', 1000);
+insert into accounts(account_id,user_id, account_type, account_ammount) values (seq_acc.nextval, 5,'Savings', 1000);
+insert into accounts(account_id,user_id, account_type, account_ammount) values (seq_acc.nextval, 1,'Checking', 100);
+insert into accounts(account_id,user_id, account_type, account_ammount) values (seq_acc.nextval, 2,'Checking', 100);
+insert into accounts(account_id,user_id, account_type, account_ammount) values (seq_acc.nextval, 3,'Checking', 100);
+insert into accounts(account_id,user_id, account_type, account_ammount) values (seq_acc.nextval, 4,'Checking', 100);
+insert into accounts(account_id,user_id, account_type, account_ammount) values (seq_acc.nextval, 5,'Checking', 100);
 
+call deposit(1, 4000);
+call deposit(2, 4000);
+call deposit(3, 4000);
+call deposit(4, 4000);
+call deposit(5, 4000);
+
+call deposit(6, 400);
+call deposit(7, 400);
+call deposit(8, 400);
+call deposit(9, 400);
+call deposit(10, 400);
+
+commit;
+exit;
 
 

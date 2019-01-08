@@ -1,44 +1,35 @@
 package com.revature.bankApp;
 
-import java.util.HashMap;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Map;
+
+
+
 import java.util.Scanner;
 
-import com.revature.bankModels.Account;
-import com.revature.bankModels.User;
-import com.revature.service.AccountService;
-import com.revature.service.BalanceException;
-import com.revature.service.InsufficientBalanceException;
-import com.revature.service.UserService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 
 public class App 
 {
-	UserService usrSer = UserService.getUserService();
-	AccountService accSer = AccountService.getAccountService();
-	User user;
+	private static Logger log = LogManager.getLogger(App.class);
+	UserInteractor userInt;
+	SuperUserManager sum;
 	
-	
-	private App () {}
+	public App() {}
     public static void main( String[] args )
     {
     	
     	App app = new App();
     	Scanner in = new Scanner(System.in);
-//    	app.greetingManager(in);
-//    	app.userManager(in);
-//    	
-    	SuperUserManager sum = SuperUserManager.getSuperUser();
-    	sum.printUsers();
-    	sum.createUser(in);
-    	sum.printUsers();
+    	app.greetingManager(in);
+    	app.userManager(in);
     	   	
     	in.close();
 
     }
     public String greeting(Scanner in) {
+    	log.traceEntry();
     	System.out.println("Wecome to JBDC Bank.");
     	System.out.println("\n\nSelect your options:");
     	System.out.println("(Please choose either the number, first letter or whole command");
@@ -47,50 +38,10 @@ public class App
     	System.out.print(":");
     	return in.nextLine();
     } 
-    public void login(Scanner in) {
-    	String userName, password;
-    	
-    	System.out.print("Username: ");
-    	userName = in.nextLine();
-    	System.out.print("Password: ");
-    	password = in.nextLine();
-    	
-    	this.user = usrSer.loginUser(userName, password);
-    	this.user.setAccounts(accSer.getAccountsbyUserID(user.getUserId()));
-    	
-    }
-    
-    public void  signUp(Scanner in) {
-    	String userName, password, passVer, firstName, lastName;
-    	boolean passNotEql;
-    	System.out.print("First Name: ");
-    	firstName = in.nextLine();
-    	System.out.print("Last Name: ");
-    	lastName = in.nextLine();
-    	System.out.print("Username: ");
-    	userName = in.nextLine();
-    	do {
-    		System.out.print("Password: ");
-    		password = in.nextLine();
-    		System.out.print("Verify Password: ");
-    		passVer = in.nextLine();
-    		passNotEql = !password.equals(passVer);
-    	} while(passNotEql);
-    	
-    	try {
-    		user = usrSer.newUser(userName, password, firstName, lastName);
-    	} //catch (AlreadyExistingUser e) {
-    	//	
-    	//} 
-    	catch (Exception e){
-    		System.out.println("Failed Please Try Again ");
-    	}
-    	System.out.println("SIGNED UP!");	
-    }
-
-    
+       
     public void greetingManager(Scanner in) {
     	boolean notMade = true;
+    	userInt = UserInteractor.getUserInteractor();
     	while(notMade) {
     		
     		String choice = greeting(in).toLowerCase().trim();
@@ -102,7 +53,7 @@ public class App
     		case "login":
     			notMade = false;
     			lineBreak(5);
-    			login(in);
+    			userInt.login(in);
     			break;
     		case "2":
     		case "2.":	
@@ -112,7 +63,10 @@ public class App
     		case "sign up":
     			notMade = false;
     			lineBreak(5);
-    			signUp(in);
+    			userInt.signUp(in);
+    			break;
+    		case "superuser":
+    			superUserHandler(in);
     			break;
     		default:
     			notValidRequest();
@@ -120,84 +74,9 @@ public class App
     		}
     	}
     }
-    
-    public void userManager(Scanner in) {
-    	boolean quitFlag = true;
-    	while(quitFlag) {
-    		String choice = displayAccountOptions(in).toLowerCase().trim();
-    		switch (choice) {
-	    		case "1":
-	    		case "1.":
-	    		case "v":
-	    		case "view":
-	    		case "view accounts":
-	    		case "1. view accounts":
-	    			printUserAccounts();
-	    			enter(in);
-	    			break;
-	    		case "2":
-	    		case "2.":
-	    		case "m":
-	    		case "manage":
-	    		case "manage accounts":
-	    		case "2. manage accounts":
-	    			accountManager(in);
-	    			
-	    			break;
-	    		case "3":
-	    		case "3.":
-	    		case "h":
-	    		case "history":
-	    		case "history of transactions":
-	    		case "3. history of transactions":
-	    			// display transaction history
-	    			System.out.println("3");
-	    			break;
-	    		case "4":
-	    		case "4.":
-	    		case "u":
-	    		case "update":
-	    		case "update information":
-	    		case "4. update information":
-	    			//userUpdateManager 
-	    			System.out.println("4");
-	    			break;
-	    		case "5":
-	    		case "5.":
-	    		case "s":
-	    		case "sign":
-	    		case "sign out":
-	    		case "5. sign out":
-	    			//sign user out
-	    			System.out.println("5");
-	    			quitFlag = true;
-	    			break;
-	    		default: 
-	    			notValidRequest();
-	    			break;
-    		}
-    	}
-    }
-    public void printUserAccounts() {
-    	List<Account> accs = getUsersAccount(this.user.getUserId());
-    	this.user.setAccounts(accs);
-    	System.out.println("Your accounts:");
-    	System.out.println(" Account Id |    1Type    |   Value");
-    	for(Account acc:accs) {
-    		System.out.print(whitespaceMaker(acc.getAccountId().toString(), 12));
-    		System.out.print("|");
-    		System.out.print(whitespaceMaker(acc.getType(), 12));
-    		System.out.print("|");
-    		System.out.print(whitespaceMaker(acc.getAmount().toString(), 12));
-    		System.out.print("\n");
-    	}
-    }
-    	
-    	
-    
-    public String displayAccountOptions(Scanner in) {
+    public String displayUserOptions(Scanner in) {
     	lineBreak(5);
-    	System.out.println("Welcome " + this.user.getUserFirstName() + " " + this.user.getUserLastName());
+    	System.out.println("Welcome " + userInt.getUser().getUserFirstName() + " " + userInt.getUser().getUserLastName());
     	lineBreak(2);
 		System.out.println("Select yout options:");
 		System.out.println("(Please Please choose either the number, first letter or word of the command)");
@@ -209,6 +88,165 @@ public class App
 		System.out.println("5. Sign Out");
 		return in.nextLine();
     }
+    
+    public void userManager(Scanner in) {
+    	boolean quitFlag = true;
+    	
+    	while(quitFlag) {
+    		String choice = displayUserOptions(in).toLowerCase().trim();
+    		switch (choice) {
+	    		case "1":
+	    		case "1.":
+	    		case "v":
+	    		case "view":
+	    		case "view accounts":
+	    		case "1. view accounts":
+	    			userInt.printUserAccounts();
+	    			enter(in);
+	    			break;
+	    		case "2":
+	    		case "2.":
+	    		case "m":
+	    		case "manage":
+	    		case "manage accounts":
+	    		case "2. manage accounts":
+	    			accountManager(in);
+	    			
+	    			break;
+//	    		case "3":
+//	    		case "3.":
+//	    		case "h":
+//	    		case "history":
+//	    		case "history of transactions":
+//	    		case "3. history of transactions":
+//	    			// display transaction history
+//	    			System.out.println("3");
+//	    			break;
+//	    		case "4":
+//	    		case "4.":
+//	    		case "u":
+//	    		case "update":
+//	    		case "update information":
+//	    		case "4. update information":
+//	    			//userUpdateManager 
+//	    			System.out.println("4");
+//	    			break;
+	    		case "5":
+	    		case "5.":
+	    		case "s":
+	    		case "sign":
+	    		case "sign out":
+	    		case "5. sign out":
+	    			userInt.signOut();
+	    			System.out.println("Successfully Signed Out.");
+	    			quitFlag = false;
+	    			break;
+	    		default: 
+	    			notValidRequest();
+	    			break;
+    		}
+    	}
+    }
+    public void superUserHandler(Scanner in) {
+    	sum = SuperUserManager.getSuperUser();
+    	boolean login = sum.login(in);
+    	if (login) {
+    		superUserOptions(in);
+    	} else {
+    		sum.endSuperUser();
+    	}
+    }
+    public String superUserOptions(Scanner in ) {
+    	lineBreak(5);
+    	System.out.println("Welcome SUPERUSER");
+    	lineBreak(2);
+		System.out.println("Select yout options:");
+		System.out.println("(Please Please choose either the number, first letter or word of the command)");
+		lineBreak(1);
+		System.out.println("1. View Users");
+		System.out.println("2. Update a User");
+		System.out.println("3. Create a User");
+		System.out.println("4. Delete a User");
+		System.out.println("5. Logout");
+		return in.nextLine();
+    }
+   public void superUserManager(Scanner in) {
+	   boolean quitFlag = true;
+   	
+   		while(quitFlag) {
+	   		String choice = superUserOptions(in).trim().toLowerCase();
+	   		switch (choice) {
+			case "1":
+			case "1.":
+			case "v":
+			case "view":
+			case "view users":
+			case "1. view users":
+				sum.printUsers();
+				enter(in);
+				break;
+			case "2":
+			case "2.":
+			case "u":
+			case "update":
+			case "update a user":
+			case "2. update a user":
+				sum.updateUser(in);
+				enter(in);
+				break;
+			case "3":
+			case "3.":
+			case "c":
+			case "create":
+			case "create a user":
+			case "3. create a user":
+				sum.createUser(in);
+				enter(in);
+				break;
+			case "4":
+			case "4.":
+			case "d":
+			case "delete":
+			case "delete a user":
+			case "4. delete a user":
+				sum.deleteUser(in);
+				enter(in);
+				break;
+			case "5":
+			case "5.":
+			case "l":
+			case "logout":
+			case "5. logout":
+				sum.endSuperUser();
+				System.out.println("Superuser logged out ");
+				quitFlag = false;
+				break;
+			default:
+				notValidRequest();
+    			break;	
+	   		}
+   		}
+   }
+    	
+    	
+    
+    
+    
+    public String accountOptions(Scanner in) {
+    	lineBreak(5);
+    	System.out.println("Select yout options:");
+		System.out.println("(Please Please choose either the number, first letter or word of the command)");
+		lineBreak(1);
+		System.out.println("1. View Accounts");
+		System.out.println("2. Deposit");
+		System.out.println("3. Withdraw");
+		System.out.println("4. Transfer");
+		System.out.println("5. New Account");
+		System.out.println("6. Delete Account");
+		System.out.println("7. Exit ");
+    	return in.nextLine();
+    }
+    
     public void accountManager(Scanner in) {
     	boolean quitFlag = true;
     	while(quitFlag) {
@@ -222,7 +260,7 @@ public class App
     		case "view":
     		case "view accounts":
     		case "1. view accounts":
-    			printUserAccounts();
+    			userInt.printUserAccounts();
     			enter(in);
     			break;
     		case "2":
@@ -230,7 +268,7 @@ public class App
     		case "d":
     		case "deposit":
     		case "2. deposit":
-    			deposit(in);
+    			userInt.deposit(in);
     			enter(in);
     			break;
     		case "3":
@@ -238,7 +276,7 @@ public class App
     		case "w":
     		case "withdraw":
     		case "3. withdraw":
-    			withdraw(in);
+    			userInt.withdraw(in);
     			enter(in);
     			break;
     		case "4":
@@ -246,7 +284,7 @@ public class App
     		case "t":
     		case "transfer":
     		case "4. transfer":
-    			 transfer(in);
+    			 userInt.transfer(in);
     			 enter(in);
     			 break;
     		case "5":
@@ -255,7 +293,7 @@ public class App
     		case "new":
     		case "new account":
     		case "5. new account":
-    			newAccount(in);
+    			userInt.newAccount(in);
     			enter(in);
     			break;
     		case "6":
@@ -263,7 +301,7 @@ public class App
     		case "delete":
     		case "delete account":
     		case "6. delete":
-    			deleteAccount(in);
+    			userInt.deleteAccount(in);
     			enter(in);
     			break;
     		case "7":
@@ -281,288 +319,8 @@ public class App
     		
     	}
     }
-    public String accountOptions(Scanner in) {
-    	lineBreak(5);
-    	System.out.println("Select yout options:");
-		System.out.println("(Please Please choose either the number, first letter or word of the command)");
-		lineBreak(1);
-		System.out.println("1. View Accounts");
-		System.out.println("2. Deposit");
-		System.out.println("3. Withdraw");
-		System.out.println("4. Transfer");
-		System.out.println("5. New Account");
-		System.out.println("6. Delete Account");
-		System.out.println("7. Exit ");
-    	return in.nextLine();
-    }
-
-    public Map<Integer, Account> accMap() {
-    	List<Account> accs = this.user.getAccounts();
-    	Map<Integer, Account> mapAcc = new HashMap<Integer, Account>();
-    	for(Account acc:accs) {
-    		mapAcc.put(acc.getAccountId(), acc);
-    	}
-    	return mapAcc;
-    }
-    public boolean deposit(Scanner in) {
-    	Map<Integer, Account> mapAcc = accMap();
     	
-    	Integer accNum = 0;
-    	int amount = 0;
-    	int input = 0;
-    	Account acc = null;
-    	
-    	while(true) {
-	    	System.out.println("Select an Acount");
-	    	try {
-	    		 input = in.nextInt();
-	    	} catch (InputMismatchException e ) {
-	    		System.out.println("Please use only numbers");
-	    		continue;
-	    	}
-	    	if (input > 0) {
-	    		accNum = input;
-	    	} else {
-	    		System.out.println("Please use only positive numbers");
-	    		continue;
-	    	}
-	    	acc = mapAcc.get(accNum);
-    		if(acc != null) {
-    			break;
-    		} else {
-    			System.out.println("No Account with that number.");
-    		}
-    	}
-    	while(true) {
-	    	System.out.println("Choose an Amount");
-	    	try {
-	    		input = in.nextInt();
-	    	} catch(InputMismatchException e) {
-	    		System.out.println("Please use only numbers");
-	    		continue;
-	    	}
-	    	if (input > 0) {
-	    		amount = input;
-	    		break;
-	    	}
-	    	System.out.println("Please use only positive numbers");
-	    }
-    	 
-    		return accSer.deposit(acc, amount);
-    	  
-    }
-    
-    public boolean withdraw(Scanner in) {
-    	Map<Integer, Account> mapAcc = accMap();
-    	
-    	Integer accNum = 0;
-    	int amount = 0;
-    	int input = 0;
-    	Account acc = null;
-    	
-    	while(true) {
-	    	System.out.println("Select an Acount");
-	    	try {
-	    		 input = in.nextInt();
-	    	} catch (InputMismatchException e ) {
-	    		System.out.println("Please use only numbers");
-	    		continue;
-	    	}
-	    	if (input > 0) {
-	    		accNum = input;
-	    		
-	    	} else {
-	    		System.out.println("Please use only positive numbers");
-	    		continue;
-	    	}
-	    	acc = mapAcc.get(accNum);
-    		if(acc != null) {
-    			break;
-    		} else {
-    			System.out.println("No Account with that number.");
-    		}
-    	}
-    	while(true) {
-	    	System.out.println("Choose an Amount");
-	    	try {
-	    		input = in.nextInt();
-	    	} catch(InputMismatchException e) {
-	    		System.out.println("Please use only numbers");
-	    		continue;
-	    	}
-	    	if (input > 0) {
-	    		amount = input;
-	    		break;
-	    	}
-	    	System.out.println("Please use only positive numbers");
-	    }
-    	try {	
-    		return accSer.withdraw(acc, amount);
-    	} catch (InsufficientBalanceException e) {
-    		System.out.println("The balance selected has insufficent balance");
-    		return false;
-    	}
-    }
-    
-    	
-	public boolean transfer(Scanner in) {
-    	Map<Integer, Account> mapAcc = accMap();
-    	
-    	Integer accNum1 = 0;
-    	Integer accNum2 = 0;
-    	int amount = 0;
-    	int input = 0;
-    	Account acc1 = null;
-    	Account acc2 = null;
-    	
-    	while(true) {
-	    	System.out.println("Select a Source Acount");
-	    	try {
-	    		 input = in.nextInt();
-	    	} catch (InputMismatchException e ) {
-	    		System.out.println("Please use only numbers");
-	    		continue;
-	    	}
-	    	if (input > 0) {
-	    		accNum1 = input;
-	    	} else {
-	    		System.out.println("Please use only positive numbers");
-	    		continue;
-	    	}
-	    	acc1 = mapAcc.get(accNum1);
-    		if(acc1 != null) {
-    			break;
-    		} else {
-    			System.out.println("No Account with that number.");
-    		}
-    	}
-    	
-    	while(true) {
-	    	System.out.println("Select a Destination Acount");
-	    	try {
-	    		 input = in.nextInt();
-	    	} catch (InputMismatchException e ) {
-	    		System.out.println("Please use only numbers");
-	    		continue;
-	    	}
-	    	if (input > 0) {
-	    		accNum1 = input;
-	    	} else {
-	    		System.out.println("Please use only positive numbers");
-	    		continue;
-	    	}
-	    	acc2 = mapAcc.get(accNum2);
-    		if(acc1 != null) {
-    			break;
-    		} else {
-    			System.out.println("No Account with that number.");
-    		}
-    	}
-    	
-    	while(true) {
-	    	System.out.println("Choose an Amount");
-	    	try {
-	    		 input = in.nextInt();
-		   		
-	    	} catch(InputMismatchException e) {
-	    		System.out.println("Please use only positive numbers");
-	    		continue;
-	    	}
-	    	if (input > 0) {
-	   			amount = input;
-	   			break;
-	   		}
-	    	System.out.println("Please use only positive numbers");
-    	}
-    	try {	
-    		return accSer.transfer(acc1, acc2, amount);
-    	} catch (InsufficientBalanceException e) {
-    		System.out.println("The balance selected has insufficent balance");
-    		return false;
-    	}	
-    }
-    	
-    
-	public void newAccount(Scanner in){
-		String type = null;
-		
-		System.out.println("New Account type");
-		type = in.nextLine();
-		
-		boolean worked = accSer.newAccount(this.user.getUserId(), type);
-		if (worked) {
-			this.user.setAccounts(getUsersAccount(this.user.getUserId()));
-		}
-	}
-	
-	public void deleteAccount(Scanner in) {
-		Map<Integer, Account> mapAcc = accMap();
-		
-		Integer accNum = 0;
-    	int input = 0;
-    	Account acc1 = null;
-    	
-    	while(true) {
-	    	System.out.println("Select a Source Acount");
-	    	try {
-	    		 input = in.nextInt();
-	    	} catch (InputMismatchException e ) {
-	    		System.out.println("Please use only numbers");
-	    		continue;
-	    	}
-	    	if (input > 0) {
-	    		accNum = input;
-	    	} else {
-	    		System.out.println("Please use only positive numbers");
-	    		continue;
-	    	}
-	    	acc1 = mapAcc.get(accNum);
-    		if(acc1 != null) {
-    			break;
-    		} else {
-    			System.out.println("No Account with that number.");
-    		}
-    	}
-    	try {
-    		accSer.deleteAccount(acc1);
-    		
-    	} catch (BalanceException e) {
-    		System.out.println("This acccount does not have a balance of 0");
-    	}
-    	this.user.setAccounts(getUsersAccount(this.user.getUserId()));
-		
-	}
-    	
-    public List<Account> getUsersAccount(Integer userId){
-    	List<Account> listAcc = null;
-    	try {
-    		 listAcc = accSer.getAccountsbyUserID(userId);
-    	} catch (Exception e) {
-    		System.out.println("Unable to recover users account");
-    	}
-    	return listAcc;
-    }
-    
-    public String whitespaceMaker(String string, int toSize) {
-    	int sizeStr = string.length();
-    	int sizeRemain = toSize - sizeStr;
-    	int front = sizeRemain/2;
-    	int back = sizeRemain - front;
-    	
-    	StringBuffer sb = new StringBuffer();
-    	for (int i = 0; i < front; ++i) {
-    		sb.append(' ');
-    	}
-    	
-    	sb.append(string);
-    	
-    	for (int i = 0; i < back; ++i) {
-    		sb.append(' ');
-    	}
-    	
-    	return sb.toString();
-    	
-    }
+    //App helper functions
     
     public void lineBreak(int numBreak) {
     	for(int i = 0; i < numBreak; ++i) {
