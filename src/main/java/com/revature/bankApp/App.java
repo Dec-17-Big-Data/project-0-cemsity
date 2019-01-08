@@ -1,14 +1,9 @@
 package com.revature.bankApp;
 
-
-
-
 import java.util.Scanner;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-
 
 public class App 
 {
@@ -19,14 +14,14 @@ public class App
 	public App() {}
     public static void main( String[] args )
     {
-    	
+    	log.traceEntry();
     	App app = new App();
     	Scanner in = new Scanner(System.in);
     	app.greetingManager(in);
     	app.userManager(in);
     	   	
     	in.close();
-
+    	log.traceExit();
     }
     public String greeting(Scanner in) {
     	log.traceEntry();
@@ -40,6 +35,7 @@ public class App
     } 
        
     public void greetingManager(Scanner in) {
+    	log.traceEntry();
     	boolean notMade = true;
     	userInt = UserInteractor.getUserInteractor();
     	while(notMade) {
@@ -73,8 +69,10 @@ public class App
     			break;
     		}
     	}
+    	log.traceExit();
     }
     public String displayUserOptions(Scanner in) {
+    	log.traceEntry();
     	lineBreak(5);
     	System.out.println("Welcome " + userInt.getUser().getUserFirstName() + " " + userInt.getUser().getUserLastName());
     	lineBreak(2);
@@ -86,10 +84,13 @@ public class App
 		System.out.println("3. History of Transactions");
 		System.out.println("4. Update Information");
 		System.out.println("5. Sign Out");
-		return in.nextLine();
+		
+		return log.traceExit(in.nextLine());
+		
     }
     
     public void userManager(Scanner in) {
+    	log.traceEntry();
     	boolean quitFlag = true;
     	
     	while(quitFlag) {
@@ -146,8 +147,10 @@ public class App
 	    			break;
     		}
     	}
+    	log.traceExit();
     }
     public void superUserHandler(Scanner in) {
+    	log.traceEntry();
     	sum = SuperUserManager.getSuperUser();
     	boolean login = sum.login(in);
     	if (login) {
@@ -155,8 +158,10 @@ public class App
     	} else {
     		sum.endSuperUser();
     	}
+    	log.traceExit();
     }
     public String superUserOptions(Scanner in ) {
+    	log.traceEntry();
     	lineBreak(5);
     	System.out.println("Welcome SUPERUSER");
     	lineBreak(2);
@@ -168,9 +173,10 @@ public class App
 		System.out.println("3. Create a User");
 		System.out.println("4. Delete a User");
 		System.out.println("5. Logout");
-		return in.nextLine();
+		return log.traceExit(in.nextLine());
     }
    public void superUserManager(Scanner in) {
+	   log.traceEntry();
 	   boolean quitFlag = true;
    	
    		while(quitFlag) {
@@ -226,6 +232,7 @@ public class App
     			break;	
 	   		}
    		}
+   		log.traceExit();
    }
     	
     	
@@ -233,6 +240,7 @@ public class App
     
     
     public String accountOptions(Scanner in) {
+    	log.traceEntry();
     	lineBreak(5);
     	System.out.println("Select yout options:");
 		System.out.println("(Please Please choose either the number, first letter or word of the command)");
@@ -244,10 +252,11 @@ public class App
 		System.out.println("5. New Account");
 		System.out.println("6. Delete Account");
 		System.out.println("7. Exit ");
-    	return in.nextLine();
+    	return log.traceExit(in.nextLine());
     }
     
     public void accountManager(Scanner in) {
+    	log.traceEntry();
     	boolean quitFlag = true;
     	while(quitFlag) {
     		lineBreak(5);
@@ -313,25 +322,29 @@ public class App
     			break;
     		default:
     			notValidRequest();
-    			
-    		
     		}
-    		
     	}
+    	log.traceExit();
     }
     	
     //App helper functions
     
     public void lineBreak(int numBreak) {
+    	log.traceEntry();
     	for(int i = 0; i < numBreak; ++i) {
     		System.out.print("\n");
     	}
+    	log.traceExit();
     }
     public void notValidRequest() {
+    	log.traceEntry();
     	System.out.println("I am sorry, I did not understand the request.");
+    	log.traceExit();
     }
     public void enter(Scanner in) {
+    	log.traceEntry();
     	System.out.println("Press ENTER to continue.");
     	in.nextLine();
+    	log.traceExit();
     }
 }
