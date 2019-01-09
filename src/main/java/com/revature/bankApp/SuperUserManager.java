@@ -39,6 +39,7 @@ public class SuperUserManager {
 		sum = null;
 	}
 	public boolean login(Scanner in) {
+		log.traceEntry();
 		System.out.println("SuperUser login");
 		System.out.print("Username: ");
 		String username = in.nextLine();
@@ -54,25 +55,32 @@ public class SuperUserManager {
 		}
 	    String propUsername = props.getProperty("superuser.username");
 		String propPassword = props.getProperty("superuser.password");
-		return (username.equals(propUsername) && password.equals(propPassword));
+		
+		return log.traceExit(username.equals(propUsername) && password.equals(propPassword));
 	}
 	public List<User> getAllUsers(){
-		return usrSer.getAllUsers();
+		log.traceEntry();
+		return log.traceExit(usrSer.getAllUsers());
 	}
 	
 	public void printUsers() {
+		log.traceEntry();
 		users = getAllUsers();
 		System.out.printf("%-10s|%-15s|%-20s|%-15s|%-15s\n", "User ID", "User Name","Password", "First Name", "Last Name");
 		for(User user : users) {
 			System.out.printf("%-10d|%-15s|%-20s|%-15s|%-15s\n", user.getUserId(), user.getUserName(), user.getUserPassword(), user.getUserFirstName(), user.getUserLastName());
 		}
+		log.traceExit();
 	}
 	public void printUser(User user) {
+		log.traceEntry();
 		System.out.printf("%-10s|%-15s|%-20s|%-15s|%-15s\n", "User ID", "User Name","Password", "First Name", "Last Name");
 		System.out.printf("%-10d|%-15s|%-20s|%-15s|%-15s\n", user.getUserId(), user.getUserName(), user.getUserPassword(), user.getUserFirstName(), user.getUserLastName());
+		log.traceExit();
 	}
 	
 	public void updateUser(Scanner in) {
+		log.traceEntry();
 		Map<Integer, User> mapUsr = listToMap(users);
 		
 		User user = null;
@@ -157,10 +165,11 @@ public class SuperUserManager {
 			}
 			this.users = this.getAllUsers();
 		}
-		
+		log.traceExit();
 	}
 	
 	public void createUser(Scanner in) {
+		log.traceEntry();
 		System.out.println("Creating a New User:");
 		System.out.print("Username   : ");
 		String userName = in.nextLine();
@@ -180,9 +189,11 @@ public class SuperUserManager {
 			System.out.println("No such user exists");
 		}
 		this.users = this.getAllUsers();
+		log.traceExit();
 	}
 	
 	public void deleteUser(Scanner in) {
+		log.traceEntry();
 		Map<Integer, User> mapUsr = listToMap(users);
 		
 		User user = null;
@@ -235,16 +246,18 @@ public class SuperUserManager {
 			}
 		}
 		this.users = this.getAllUsers();
+		log.traceExit();
 	}
 	
 	
 	
 	public Map<Integer, User> listToMap(List<User> users) {
-    	
+    	log.traceEntry();
     	Map<Integer, User> mapUsr = new HashMap<Integer, User>();
     	for(User user:users) {
     		mapUsr.put(user.getUserId(), user);
     	}
-    	return mapUsr;
-    }
+    	return log.traceExit(mapUsr);
+	}
+	
 }

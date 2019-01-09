@@ -64,6 +64,7 @@ public class App {
 				break;
 			case "superuser":
 				superUserHandler(in);
+				notMade = false;
 				break;
 			default:
 				notValidRequest();
@@ -139,8 +140,9 @@ public class App {
 		log.traceEntry();
 		sum = SuperUserManager.getSuperUser();
 		boolean login = sum.login(in);
+		System.out.println(login);
 		if (login) {
-			superUserOptions(in);
+			superUserManager(in);
 		} else {
 			sum.endSuperUser();
 		}
