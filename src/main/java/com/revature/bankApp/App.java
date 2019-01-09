@@ -84,8 +84,8 @@ public class App {
 		lineBreak(1);
 		System.out.println("1. View Accounts");
 		System.out.println("2. Manage Accounts");
-		System.out.println("3. History of Transactions");
-		System.out.println("4. Update Information");
+//		System.out.println("3. History of Transactions");
+//		System.out.println("4. Update Information");
 		System.out.println("5. Sign Out");
 
 		return log.traceExit(in.nextLine());
