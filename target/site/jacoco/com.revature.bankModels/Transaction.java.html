@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Transaction.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">bankApp</a> &gt; <a href="index.source.html" class="el_package">com.revature.bankModels</a> &gt; <span class="el_source">Transaction.java</span></div><h1>Transaction.java</h1><pre class="source lang-java linenums">package com.revature.bankModels;
+
+import java.io.Serializable;
+import java.util.Date;
+
+public class Transaction implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -2177378413204015167L;
+	private Integer transactionId;
+	private Integer account1Id;
+	private Integer account2Id;
+	private Integer amount;
+	private String  type;
+	private Date timeStamp;
+	
+	
+	public Transaction() {
+<span class="nc" id="L20">		super();</span>
+<span class="nc" id="L21">	}</span>
+
+
+	public Integer getTransactionId() {
+<span class="nc" id="L25">		return transactionId;</span>
+	}
+
+
+	public void setTransactionId(Integer transactionId) {
+<span class="nc" id="L30">		this.transactionId = transactionId;</span>
+<span class="nc" id="L31">	}</span>
+
+
+	public Integer getAccount1Id() {
+<span class="nc" id="L35">		return account1Id;</span>
+	}
+
+
+	public void setAccount1Id(Integer account1Id) {
+<span class="nc" id="L40">		this.account1Id = account1Id;</span>
+<span class="nc" id="L41">	}</span>
+
+
+	public Integer getAccount2Id() {
+<span class="nc" id="L45">		return account2Id;</span>
+	}
+
+
+	public void setAccount2Id(Integer account2Id) {
+<span class="nc" id="L50">		this.account2Id = account2Id;</span>
+<span class="nc" id="L51">	}</span>
+
+
+	public Integer getAmount() {
+<span class="nc" id="L55">		return amount;</span>
+	}
+
+
+	public void setAmount(Integer amount) {
+<span class="nc" id="L60">		this.amount = amount;</span>
+<span class="nc" id="L61">	}</span>
+
+
+	public String getType() {
+<span class="nc" id="L65">		return type;</span>
+	}
+
+
+	public void setType(String type) {
+<span class="nc" id="L70">		this.type = type;</span>
+<span class="nc" id="L71">	}</span>
+
+
+	public Date getTimeStamp() {
+<span class="nc" id="L75">		return timeStamp;</span>
+	}
+
+
+	public void setTimeStamp(Date timeStamp) {
+<span class="nc" id="L80">		this.timeStamp = timeStamp;</span>
+<span class="nc" id="L81">	}</span>
+
+
+	public static long getSerialversionuid() {
+<span class="nc" id="L85">		return serialVersionUID;</span>
+	}
+
+
+	@Override
+	public int hashCode() {
+<span class="nc" id="L91">		final int prime = 31;</span>
+<span class="nc" id="L92">		int result = 1;</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">		result = prime * result + ((account1Id == null) ? 0 : account1Id.hashCode());</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">		result = prime * result + ((account2Id == null) ? 0 : account2Id.hashCode());</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">		result = prime * result + ((amount == null) ? 0 : amount.hashCode());</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">		result = prime * result + ((timeStamp == null) ? 0 : timeStamp.hashCode());</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">		result = prime * result + ((transactionId == null) ? 0 : transactionId.hashCode());</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">		result = prime * result + ((type == null) ? 0 : type.hashCode());</span>
+<span class="nc" id="L99">		return result;</span>
+	}
+
+
+	@Override
+	public boolean equals(Object obj) {
+<span class="nc bnc" id="L105" title="All 2 branches missed.">		if (this == obj)</span>
+<span class="nc" id="L106">			return true;</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">		if (obj == null)</span>
+<span class="nc" id="L108">			return false;</span>
+<span class="nc bnc" id="L109" title="All 2 branches missed.">		if (getClass() != obj.getClass())</span>
+<span class="nc" id="L110">			return false;</span>
+<span class="nc" id="L111">		Transaction other = (Transaction) obj;</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">		if (account1Id == null) {</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">			if (other.account1Id != null)</span>
+<span class="nc" id="L114">				return false;</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">		} else if (!account1Id.equals(other.account1Id))</span>
+<span class="nc" id="L116">			return false;</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">		if (account2Id == null) {</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">			if (other.account2Id != null)</span>
+<span class="nc" id="L119">				return false;</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">		} else if (!account2Id.equals(other.account2Id))</span>
+<span class="nc" id="L121">			return false;</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">		if (amount == null) {</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">			if (other.amount != null)</span>
+<span class="nc" id="L124">				return false;</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">		} else if (!amount.equals(other.amount))</span>
+<span class="nc" id="L126">			return false;</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">		if (timeStamp == null) {</span>
+<span class="nc bnc" id="L128" title="All 2 branches missed.">			if (other.timeStamp != null)</span>
+<span class="nc" id="L129">				return false;</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">		} else if (!timeStamp.equals(other.timeStamp))</span>
+<span class="nc" id="L131">			return false;</span>
+<span class="nc bnc" id="L132" title="All 2 branches missed.">		if (transactionId == null) {</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">			if (other.transactionId != null)</span>
+<span class="nc" id="L134">				return false;</span>
+<span class="nc bnc" id="L135" title="All 2 branches missed.">		} else if (!transactionId.equals(other.transactionId))</span>
+<span class="nc" id="L136">			return false;</span>
+<span class="nc bnc" id="L137" title="All 2 branches missed.">		if (type == null) {</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">			if (other.type != null)</span>
+<span class="nc" id="L139">				return false;</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">		} else if (!type.equals(other.type))</span>
+<span class="nc" id="L141">			return false;</span>
+<span class="nc" id="L142">		return true;</span>
+	}
+
+
+	@Override
+	public String toString() {
+<span class="nc" id="L148">		return &quot;Transaction [transactionId=&quot; + transactionId + &quot;, account1Id=&quot; + account1Id + &quot;, account2Id=&quot;</span>
+<span class="nc" id="L149">				+ account2Id + &quot;, amount=&quot; + amount + &quot;, type=&quot; + type + &quot;, timeStamp=&quot; + timeStamp + &quot;]&quot;;</span>
+	}
+	
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

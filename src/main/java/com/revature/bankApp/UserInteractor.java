@@ -14,6 +14,7 @@ import com.revature.bankModels.User;
 import com.revature.service.AccountService;
 import com.revature.service.BalanceException;
 import com.revature.service.InsufficientBalanceException;
+import com.revature.service.NoSuchUserException;
 import com.revature.service.UserNameExistsException;
 import com.revature.service.UserService;
 
@@ -35,13 +36,20 @@ public class UserInteractor {
 	public void login(Scanner in) {
 		log.traceEntry();
     	String userName, password;
-    	
-    	System.out.print("Username: ");
-    	userName = in.nextLine();
-    	System.out.print("Password: ");
-    	password = in.nextLine();
-    	
-    	this.user = usrSer.loginUser(userName, password);
+    	while(true) {
+	    	System.out.print("Username: ");
+	    	userName = in.nextLine();
+	    	System.out.print("Password: ");
+	    	password = in.nextLine();
+	    	try {
+	    		this.user = usrSer.loginUser(userName, password);
+	    		break;
+	    	} catch (NoSuchUserException e) {
+	    		System.out.println("User Does Not Exist");
+	    		continue;
+	    	}
+	    	
+    	}
     	this.user.setAccounts(accSer.getAccountsbyUserID(user.getUserId()));
     	log.traceExit();
     }
@@ -168,7 +176,7 @@ public class UserInteractor {
     	Account acc = null;
     	
     	while(true) {
-	    	System.out.println("Select an Acount");
+	    	System.out.println("Select an Account");
 	    	try {
 	    		 input = in.nextInt();
 	    	} catch (InputMismatchException e ) {
@@ -267,7 +275,7 @@ public class UserInteractor {
 	    		continue;
 	    	}
 	    	if (input > 0) {
-	    		accNum1 = input;
+	    		accNum2 = input;
 	    	} else {
 	    		System.out.println("Please use only positive numbers");
 	    		continue;

@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.revature.bankModels.User;
+import com.revature.service.NoSuchUserException;
 import com.revature.service.UserNameExistsException;
 import com.revature.service.UserService;
 
@@ -141,9 +142,13 @@ public class SuperUserManager {
 					user.setUserPassword(password);
 					user.setUserFirstName(firstName);
 					user.setUserLastName(lastName);
-					usrSer.updateUser(user);
-					System.out.println("User has been updated succesfully");
-					break edit;
+					try {
+						usrSer.updateUser(user);
+						System.out.println("User has been updated succesfully");
+						break edit;
+					} catch(NoSuchUserException e) {
+						System.out.println("No Such User Exists");
+					}
 				} else if (rightUsr.equals("n")){
 					break question;
 				} else {
@@ -171,6 +176,8 @@ public class SuperUserManager {
 			System.out.println("New User Created Successfully");
 		} catch (UserNameExistsException e) {
 			System.out.println("A user with that username already exists");
+		} catch (NoSuchUserException e) {
+			System.out.println("No such user exists");
 		}
 		this.users = this.getAllUsers();
 	}

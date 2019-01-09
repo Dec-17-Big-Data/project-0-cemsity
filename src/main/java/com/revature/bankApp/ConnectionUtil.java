@@ -39,9 +39,10 @@ public class ConnectionUtil {
 	String password = props.getProperty("jdbc.password");
 		
 	try {
-		con = DriverManager.getConnection(endpoint, username, password);
+		connect = DriverManager.getConnection(endpoint, username, password);
 		
-		return con;
+		log.traceExit(connect);
+		return connect;
 	} catch (SQLException e) {
 		log.catching(e);
 		log.error("Sql Exception",e);

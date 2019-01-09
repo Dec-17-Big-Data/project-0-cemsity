@@ -28,7 +28,7 @@ public class UserService {
 	}
 	
 	// Business Logic
-	public User getUserByName(String userName){
+	public User getUserByName(String userName) throws NoSuchUserException  {
 		log.traceEntry();
 		User user = null;
 		Optional<User> optUser = userDao.getUserByName(userName);
@@ -40,15 +40,22 @@ public class UserService {
 		} catch (NoSuchElementException  e) {
 			log.catching(e);
 			log.error(e);
-		}
+			throw new NoSuchUserException();
+			
+			
+		} 
 		
-		return null;
 	}
 	
-	public User loginUser(String userName, String password) throws InvalidPasswordException {
+	public User loginUser(String userName, String password) throws InvalidPasswordException, NoSuchUserException {
 		log.traceEntry();
-		User user = this.getUserByName(userName);
 		
+		User user;
+		try {
+			user= this.getUserByName(userName);
+		} catch (NoSuchUserException e) {
+			throw e;
+		}
 		if (!user.getUserPassword().equals(password)) {
 			throw new InvalidPasswordException();
 		} 
@@ -58,12 +65,16 @@ public class UserService {
 		
 	}
 		
-	public User newUser(String userName, String password, String firstName, String lastName) throws UserNameExistsException{
+	public User newUser(String userName, String password, String firstName, String lastName) throws UserNameExistsException, NoSuchUserException{
 		log.traceEntry();
 		User user = new User(userName, password, firstName, lastName );
 		boolean worked = userDao.newUser(user);
 		if (worked) {
-			user = this.getUserByName(userName);
+			try {
+				user = this.getUserByName(userName);
+			} catch (NoSuchUserException e) {
+				throw e;
+			}
 			log.traceExit(user);
 			return user;
 		} else {
@@ -90,11 +101,15 @@ public class UserService {
 		return null;
 	};
 	
-	public User updateUser(User user) {
+	public User updateUser(User user) throws NoSuchUserException{
 		log.traceEntry();
 		boolean worked = userDao.updateUser(user);
 		if (worked) {
-			user = this.getUserByName(user.getUserName());
+			try {
+				user = this.getUserByName(user.getUserName());
+			} catch (NoSuchUserException e) {
+				throw e;
+			}
 			log.traceExit(user);
 			return user;
 		} 

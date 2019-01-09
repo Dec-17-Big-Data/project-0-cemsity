@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ConnectionUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">bankApp</a> &gt; <a href="index.source.html" class="el_package">com.revature.bankApp</a> &gt; <span class="el_source">ConnectionUtil.java</span></div><h1>ConnectionUtil.java</h1><pre class="source lang-java linenums">package com.revature.bankApp;
+
+import java.io.*;
+import java.sql.*;
+import java.util.Properties;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+
+
+public class ConnectionUtil {
+<span class="fc" id="L12">  private static Connection connect = null;</span>
+<span class="fc" id="L13">  private static Logger log = LogManager.getLogger(ConnectionUtil.class);</span>
+
+<span class="nc" id="L15">  private ConnectionUtil(){} //Singleton</span>
+
+  public static Connection getConnection() {
+<span class="fc" id="L18">    log.traceEntry();</span>
+<span class="pc bpc" id="L19" title="1 of 2 branches missed.">    if (connect != null){</span>
+<span class="nc" id="L20">      return ConnectionUtil.connect;</span>
+    }
+<span class="fc" id="L22">    Properties props = new Properties();</span>
+<span class="fc" id="L23">    try (InputStream in = new FileInputStream(&quot;src\\main\\resources\\connections.properties&quot;);) {</span>
+<span class="fc" id="L24">    	props.load(in);</span>
+<span class="pc bpc" id="L25" title="7 of 8 branches missed.">    } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L26">		log.error(e);</span>
+<span class="nc" id="L27">	} catch (IOException e) {</span>
+<span class="nc" id="L28">		log.error(e);</span>
+	}
+    try {
+<span class="fc" id="L31">		Class.forName(&quot;oracle.jdbc.driver.OracleDriver&quot;);</span>
+<span class="pc" id="L32">    } catch (Exception e) {</span>
+<span class="nc" id="L33">    	log.error(e);</span>
+    }
+<span class="fc" id="L35">	Connection con = null;</span>
+		
+<span class="fc" id="L37">	String endpoint = props.getProperty(&quot;jdbc.url&quot;);</span>
+<span class="fc" id="L38">	String username = props.getProperty(&quot;jdbc.username&quot;);</span>
+<span class="fc" id="L39">	String password = props.getProperty(&quot;jdbc.password&quot;);</span>
+		
+	try {
+<span class="fc" id="L42">		con = DriverManager.getConnection(endpoint, username, password);</span>
+		
+<span class="fc" id="L44">		return con;</span>
+<span class="nc" id="L45">	} catch (SQLException e) {</span>
+<span class="nc" id="L46">		log.catching(e);</span>
+<span class="nc" id="L47">		log.error(&quot;Sql Exception&quot;,e);</span>
+	}
+	
+<span class="nc" id="L50">	return null;</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

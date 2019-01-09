@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SuperUserManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">bankApp</a> &gt; <a href="index.source.html" class="el_package">com.revature.bankApp</a> &gt; <span class="el_source">SuperUserManager.java</span></div><h1>SuperUserManager.java</h1><pre class="source lang-java linenums">package com.revature.bankApp;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Scanner;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.revature.bankModels.User;
+import com.revature.service.UserNameExistsException;
+import com.revature.service.UserService;
+
+public class SuperUserManager {
+	List&lt;User&gt; users;
+<span class="nc" id="L22">	static UserService usrSer = UserService.getUserService();</span>
+	static SuperUserManager sum;
+<span class="nc" id="L24">	private static Logger log = LogManager.getLogger(SuperUserManager.class);</span>
+	
+<span class="nc" id="L26">	private SuperUserManager() {</span>
+<span class="nc" id="L27">		this.users = this.getAllUsers();</span>
+<span class="nc" id="L28">	}</span>
+
+	public static SuperUserManager getSuperUser() {
+<span class="nc bnc" id="L31" title="All 2 branches missed.">		if (sum == null) {</span>
+<span class="nc" id="L32">			sum = new SuperUserManager();</span>
+		}
+<span class="nc" id="L34">		return sum;</span>
+	}
+	
+	public void endSuperUser() {
+<span class="nc" id="L38">		sum = null;</span>
+<span class="nc" id="L39">	}</span>
+	public boolean login(Scanner in) {
+<span class="nc" id="L41">		System.out.println(&quot;SuperUser login&quot;);</span>
+<span class="nc" id="L42">		System.out.print(&quot;Username: &quot;);</span>
+<span class="nc" id="L43">		String username = in.nextLine();</span>
+<span class="nc" id="L44">		System.out.print(&quot;Password:&quot;);</span>
+<span class="nc" id="L45">		String password = in.nextLine();</span>
+<span class="nc" id="L46">		Properties props = new Properties();</span>
+<span class="nc" id="L47">	    try (InputStream inSt = new FileInputStream(&quot;src\\main\\resources\\connections.properties&quot;);) {</span>
+<span class="nc" id="L48">	    	props.load(inSt);</span>
+<span class="nc bnc" id="L49" title="All 8 branches missed.">	    } catch (FileNotFoundException e) {</span>
+<span class="nc" id="L50">			log.error(e);</span>
+<span class="nc" id="L51">		} catch (IOException e) {</span>
+<span class="nc" id="L52">			log.error(e);</span>
+		}
+<span class="nc" id="L54">	    String propUsername = props.getProperty(&quot;superuser.username&quot;);</span>
+<span class="nc" id="L55">		String propPassword = props.getProperty(&quot;superuser.password&quot;);</span>
+<span class="nc bnc" id="L56" title="All 4 branches missed.">		return (username.equals(propUsername) &amp;&amp; password.equals(propPassword));</span>
+	}
+	public List&lt;User&gt; getAllUsers(){
+<span class="nc" id="L59">		return usrSer.getAllUsers();</span>
+	}
+	
+	public void printUsers() {
+<span class="nc" id="L63">		users = getAllUsers();</span>
+<span class="nc" id="L64">		System.out.printf(&quot;%-10s|%-15s|%-20s|%-15s|%-15s\n&quot;, &quot;User ID&quot;, &quot;User Name&quot;,&quot;Password&quot;, &quot;First Name&quot;, &quot;Last Name&quot;);</span>
+<span class="nc bnc" id="L65" title="All 2 branches missed.">		for(User user : users) {</span>
+<span class="nc" id="L66">			System.out.printf(&quot;%-10d|%-15s|%-20s|%-15s|%-15s\n&quot;, user.getUserId(), user.getUserName(), user.getUserPassword(), user.getUserFirstName(), user.getUserLastName());</span>
+		}
+<span class="nc" id="L68">	}</span>
+	public void printUser(User user) {
+<span class="nc" id="L70">		System.out.printf(&quot;%-10s|%-15s|%-20s|%-15s|%-15s\n&quot;, &quot;User ID&quot;, &quot;User Name&quot;,&quot;Password&quot;, &quot;First Name&quot;, &quot;Last Name&quot;);</span>
+<span class="nc" id="L71">		System.out.printf(&quot;%-10d|%-15s|%-20s|%-15s|%-15s\n&quot;, user.getUserId(), user.getUserName(), user.getUserPassword(), user.getUserFirstName(), user.getUserLastName());</span>
+<span class="nc" id="L72">	}</span>
+	
+	public void updateUser(Scanner in) {
+<span class="nc" id="L75">		Map&lt;Integer, User&gt; mapUsr = listToMap(users);</span>
+		
+<span class="nc" id="L77">		User user = null;</span>
+<span class="nc" id="L78">		this.printUsers();</span>
+		user: while(true) {
+<span class="nc" id="L80">			System.out.println(&quot;Plese choose a User to Edit. (Choose by User ID)&quot;);</span>
+<span class="nc" id="L81">			int choice = 0;</span>
+			try {
+<span class="nc" id="L83">				choice = in.nextInt();</span>
+<span class="nc" id="L84">			} catch (Exception e) {</span>
+<span class="nc" id="L85">				log.error(e);</span>
+<span class="nc" id="L86">				System.out.println(&quot;Please select a vaild User ID&quot;);</span>
+<span class="nc" id="L87">				continue;</span>
+			}
+<span class="nc" id="L89">			user = mapUsr.get(choice);</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">			if (user == null) {</span>
+<span class="nc" id="L91">				System.out.println(&quot;Please select a vaild User ID&quot;);</span>
+<span class="nc" id="L92">				continue;</span>
+			}		
+<span class="nc" id="L94">			printUser(user);</span>
+<span class="nc" id="L95">			question: while(true) {</span>
+<span class="nc" id="L96">				System.out.println(&quot;Is this the right user? ([Y]es or [N]o)&quot;);</span>
+<span class="nc" id="L97">				String rightUsr = in.nextLine().toLowerCase().trim();</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">				if (rightUsr.equals(&quot;y&quot;)){</span>
+<span class="nc" id="L99">					break user;</span>
+<span class="nc bnc" id="L100" title="All 2 branches missed.">				} else if (rightUsr.equals(&quot;n&quot;)){</span>
+<span class="nc" id="L101">					break question;</span>
+				} else {
+<span class="nc" id="L103">					System.out.println(&quot;Please answer with a Yes or No.&quot;);</span>
+				}
+			}
+			
+		}
+<span class="nc" id="L108">		edit: while(true) {</span>
+<span class="nc" id="L109">			System.out.println(&quot;Please edit the fields you want. Leave blank to not change&quot;);</span>
+<span class="nc" id="L110">			System.out.println(&quot;Username: &quot; + user.getUserName());</span>
+<span class="nc" id="L111">			String usrName = in.nextLine();</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">			if (usrName.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L113">				usrName = user.getUserName();</span>
+			}
+<span class="nc" id="L115">			System.out.println(&quot;Password: &quot; + user.getUserPassword());</span>
+<span class="nc" id="L116">			String password = in.nextLine();</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">			if (password.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L118">				password = user.getUserPassword();</span>
+			}
+<span class="nc" id="L120">			System.out.println(&quot;First Name: &quot; + user.getUserFirstName());</span>
+<span class="nc" id="L121">			String firstName = in.nextLine();</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">			if (firstName.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L123">				firstName = user.getUserFirstName();</span>
+			}
+<span class="nc" id="L125">			System.out.println(&quot;Last Name: &quot; + user.getUserLastName());</span>
+<span class="nc" id="L126">			String lastName = in.nextLine();</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">			if (lastName.equals(&quot;&quot;)) {</span>
+<span class="nc" id="L128">				lastName = user.getUserLastName();</span>
+			}
+			
+<span class="nc" id="L131">			System.out.println(&quot;Here are the new User Fields&quot;);</span>
+<span class="nc" id="L132">			System.out.println(&quot;Username: &quot; + usrName);</span>
+<span class="nc" id="L133">			System.out.println(&quot;Password: &quot; + password);</span>
+<span class="nc" id="L134">			System.out.println(&quot;First Name: &quot; + firstName);</span>
+<span class="nc" id="L135">			System.out.println(&quot;Last Name: &quot; + lastName);</span>
+<span class="nc" id="L136">			question: while(true) {</span>
+<span class="nc" id="L137">				System.out.println(&quot;Are these changes correct? (Yes or No)&quot;);</span>
+<span class="nc" id="L138">				String rightUsr = in.nextLine().toLowerCase().trim().substring(0, 1);</span>
+<span class="nc bnc" id="L139" title="All 2 branches missed.">				if (rightUsr.equals(&quot;y&quot;)){</span>
+<span class="nc" id="L140">					user.setUserName(usrName);</span>
+<span class="nc" id="L141">					user.setUserPassword(password);</span>
+<span class="nc" id="L142">					user.setUserFirstName(firstName);</span>
+<span class="nc" id="L143">					user.setUserLastName(lastName);</span>
+<span class="nc" id="L144">					usrSer.updateUser(user);</span>
+<span class="nc" id="L145">					System.out.println(&quot;User has been updated succesfully&quot;);</span>
+<span class="nc" id="L146">					break edit;</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">				} else if (rightUsr.equals(&quot;n&quot;)){</span>
+<span class="nc" id="L148">					break question;</span>
+				} else {
+<span class="nc" id="L150">					System.out.println(&quot;Please answer with a Yes or No.&quot;);</span>
+				}
+			}
+<span class="nc" id="L153">			this.users = this.getAllUsers();</span>
+		}
+		
+<span class="nc" id="L156">	}</span>
+	
+	public void createUser(Scanner in) {
+<span class="nc" id="L159">		System.out.println(&quot;Creating a New User:&quot;);</span>
+<span class="nc" id="L160">		System.out.print(&quot;Username   : &quot;);</span>
+<span class="nc" id="L161">		String userName = in.nextLine();</span>
+<span class="nc" id="L162">		System.out.print(&quot;Password   : &quot;);</span>
+<span class="nc" id="L163">		String password = in.nextLine();</span>
+<span class="nc" id="L164">		System.out.print(&quot;First Name : &quot;);</span>
+<span class="nc" id="L165">		String firstName = in.nextLine();</span>
+<span class="nc" id="L166">		System.out.print(&quot;Last Name  : &quot;);</span>
+<span class="nc" id="L167">		String lastName = in.nextLine();</span>
+		
+		try {
+<span class="nc" id="L170">			usrSer.newUser(userName, password, firstName, lastName);</span>
+<span class="nc" id="L171">			System.out.println(&quot;New User Created Successfully&quot;);</span>
+<span class="nc" id="L172">		} catch (UserNameExistsException e) {</span>
+<span class="nc" id="L173">			System.out.println(&quot;A user with that username already exists&quot;);</span>
+		}
+<span class="nc" id="L175">		this.users = this.getAllUsers();</span>
+<span class="nc" id="L176">	}</span>
+	
+	public void deleteUser(Scanner in) {
+<span class="nc" id="L179">		Map&lt;Integer, User&gt; mapUsr = listToMap(users);</span>
+		
+<span class="nc" id="L181">		User user = null;</span>
+<span class="nc" id="L182">		this.printUsers();</span>
+		user: while(true) {
+<span class="nc" id="L184">			System.out.println(&quot;Plese choose a User to Delete. (Choose by User ID)&quot;);</span>
+<span class="nc" id="L185">			int choice = 0;</span>
+			try {
+<span class="nc" id="L187">				choice = in.nextInt();</span>
+<span class="nc" id="L188">			} catch (Exception e) {</span>
+<span class="nc" id="L189">				log.error(e);</span>
+<span class="nc" id="L190">				System.out.println(&quot;Please select a vaild User ID&quot;);</span>
+<span class="nc" id="L191">				continue;</span>
+			}
+<span class="nc" id="L193">			user = mapUsr.get(choice);</span>
+<span class="nc bnc" id="L194" title="All 2 branches missed.">			if (user == null) {</span>
+<span class="nc" id="L195">				System.out.println(&quot;Please select a vaild User ID&quot;);</span>
+<span class="nc" id="L196">				continue;</span>
+			}		
+<span class="nc" id="L198">			printUser(user);</span>
+<span class="nc" id="L199">			question: while(true) {</span>
+<span class="nc" id="L200">				System.out.println(&quot;Is this the right user? ([Y]es or [N]o)&quot;);</span>
+<span class="nc" id="L201">				String rightUsr = in.nextLine().toLowerCase().trim();</span>
+<span class="nc bnc" id="L202" title="All 2 branches missed.">				if (rightUsr.equals(&quot;y&quot;)){</span>
+<span class="nc" id="L203">					break user;</span>
+<span class="nc bnc" id="L204" title="All 2 branches missed.">				} else if (rightUsr.equals(&quot;n&quot;)){</span>
+<span class="nc" id="L205">					break question;</span>
+				} else {
+<span class="nc" id="L207">					System.out.println(&quot;Please answer with a Yes or No.&quot;);</span>
+				}
+			}
+		}
+		while (true) {
+<span class="nc" id="L212">			System.out.println(&quot;To confirm the deletion of this user please type: DELETE USER or CANCEL to cancel&quot;);</span>
+<span class="nc" id="L213">			String confirm = in.nextLine();</span>
+<span class="nc bnc" id="L214" title="All 2 branches missed.">			if (confirm.equals(&quot;DELETE USER&quot;)) {</span>
+<span class="nc" id="L215">				boolean worked = usrSer.deleteUser(user);</span>
+<span class="nc bnc" id="L216" title="All 2 branches missed.">				if (worked) {</span>
+<span class="nc" id="L217">					System.out.println(&quot;Succesfully delete user.&quot;);</span>
+<span class="nc" id="L218">					break;</span>
+				} else {
+<span class="nc" id="L220">					System.out.println(&quot;Delete user Failed.&quot;);</span>
+<span class="nc" id="L221">					break;</span>
+				}
+<span class="nc bnc" id="L223" title="All 2 branches missed.">			} else if (confirm.equals(&quot;CANCEL&quot;)) {</span>
+<span class="nc" id="L224">				System.out.println(&quot;Canceling&quot;);</span>
+				break;
+			} else {
+				continue;
+			}
+		}
+<span class="nc" id="L230">		this.users = this.getAllUsers();</span>
+<span class="nc" id="L231">	}</span>
+	
+	
+	
+	public Map&lt;Integer, User&gt; listToMap(List&lt;User&gt; users) {
+    	
+<span class="nc" id="L237">    	Map&lt;Integer, User&gt; mapUsr = new HashMap&lt;Integer, User&gt;();</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">    	for(User user:users) {</span>
+<span class="nc" id="L239">    		mapUsr.put(user.getUserId(), user);</span>
+    	}
+<span class="nc" id="L241">    	return mapUsr;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

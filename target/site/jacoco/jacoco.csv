@@ -1,0 +1,16 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+bankApp,com.revature.DAO,UserOracle,270,190,12,8,75,53,11,7,3,5
+bankApp,com.revature.DAO,AccountOracle,326,195,15,9,101,55,14,9,4,7
+bankApp,com.revature.bankApp,UserInteractor,758,0,42,0,251,0,36,0,15,0
+bankApp,com.revature.bankApp,ConnectionUtil,49,57,8,2,10,16,6,2,1,2
+bankApp,com.revature.bankApp,App,973,0,301,0,171,0,211,0,15,0
+bankApp,com.revature.bankApp,SuperUserManager,649,0,48,0,151,0,36,0,12,0
+bankApp,com.revature.bankModels,Account,151,64,38,0,39,17,23,9,4,9
+bankApp,com.revature.bankModels,Transaction,284,0,54,0,70,0,44,0,17,0
+bankApp,com.revature.bankModels,User,180,114,38,8,51,30,34,10,12,9
+bankApp,com.revature.service,InsufficientBalanceException,3,0,0,0,2,0,1,0,1,0
+bankApp,com.revature.service,UserService,59,103,5,5,21,31,5,9,2,7
+bankApp,com.revature.service,InvalidPasswordException,3,0,0,0,2,0,1,0,1,0
+bankApp,com.revature.service,AccountService,82,99,7,3,29,32,7,8,3,7
+bankApp,com.revature.service,UserNameExistsException,0,3,0,0,0,2,0,1,0,1
+bankApp,com.revature.service,BalanceException,3,0,0,0,2,0,1,0,1,0

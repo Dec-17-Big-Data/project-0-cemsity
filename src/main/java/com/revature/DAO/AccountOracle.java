@@ -146,10 +146,10 @@ public class AccountOracle implements AccountDao{
 			cs.setInt(1, account.getUserID());
 			cs.setString(2, account.getType());
 			
-			boolean result = cs.execute();
+			cs.execute();
 			
-			log.traceExit(result);
-			return result;
+			log.traceExit(true);
+			return true;
 		} catch (Exception e){
 			log.catching(e);
 			log.error("SQL Exception occured.", e);
@@ -176,10 +176,10 @@ public class AccountOracle implements AccountDao{
 			cs.setInt(1, account.getAccountId());
 			cs.setInt(2, ammount);
 			
-			boolean result = cs.execute();
+			cs.execute();
 			
-			log.traceExit(result);
-			return result;
+			log.traceExit(true);
+			return true;
 		} catch (Exception e){
 			log.catching(e);
 			log.error("SQL Exception occured.", e);
@@ -205,10 +205,10 @@ public class AccountOracle implements AccountDao{
 			cs.setInt(1, account.getAccountId());
 			cs.setInt(2, ammount);
 			
-			boolean result = cs.execute();
+			cs.execute();
 			
-			log.traceExit(result);
-			return result;
+			log.traceExit(true);
+			return true;
 		} catch (Exception e){
 			log.catching(e);
 			log.error("SQL Exception occured.", e);
@@ -218,7 +218,7 @@ public class AccountOracle implements AccountDao{
 	}
 
 	@Override
-	public boolean transfer(Account accountWithdraw, Account accountDeposit, Integer ammount) {
+	public boolean transfer(Account accountWithdraw, Account accountDeposit, Integer amount) {
 		log.traceEntry();
 		Connection con = ConnectionUtil.getConnection();
 		
@@ -233,12 +233,12 @@ public class AccountOracle implements AccountDao{
 			
 			cs.setInt(1, accountWithdraw.getAccountId());
 			cs.setInt(2, accountDeposit.getAccountId());
-			cs.setInt(3, ammount);
+			cs.setInt(3, amount);
 			
-			boolean result = cs.execute();
+			cs.execute();
 			
-			log.traceExit(result);
-			return result;
+			log.traceExit(true);
+			return true;
 		} catch (Exception e){
 			log.catching(e);
 			log.error("SQL Exception occured.", e);
@@ -261,12 +261,12 @@ public class AccountOracle implements AccountDao{
 			String sql = "call delete_account(?)";
 			CallableStatement cs = con.prepareCall(sql);
 			
-			cs.setInt(1, account.getUserID());
+			cs.setInt(1, account.getAccountId());
 			
-			boolean result = cs.execute();
+			cs.execute();
 			
-			log.traceExit(result);
-			return result;
+			log.traceExit(true);
+			return true;
 		} catch (Exception e){
 			log.catching(e);
 			log.error("SQL Exception occured.", e);
