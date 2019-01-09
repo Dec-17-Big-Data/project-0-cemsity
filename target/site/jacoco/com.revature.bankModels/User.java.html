@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>User.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">bankApp</a> &gt; <a href="index.source.html" class="el_package">com.revature.bankModels</a> &gt; <span class="el_source">User.java</span></div><h1>User.java</h1><pre class="source lang-java linenums">package com.revature.bankModels;
+
+import java.io.Serializable;
+import java.util.List;
+
+public class User implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3859983767755658597L;
+	private Integer userId;
+	private String userName;
+	private String userPassword;
+	private String userFirstName;
+	private String userLastName;
+	private boolean loggedIn;
+	private List&lt;Account&gt; accounts;
+	
+	
+	
+	public User() {
+<span class="nc" id="L22">		super();</span>
+<span class="nc" id="L23">	}</span>
+	
+	public User(Integer userId, String userName, String userPassword, String userFirstName, String userLastName) {
+<span class="fc" id="L26">		super();</span>
+<span class="fc" id="L27">		this.userId = userId;</span>
+<span class="fc" id="L28">		this.userName = userName;</span>
+<span class="fc" id="L29">		this.userPassword = userPassword;</span>
+<span class="fc" id="L30">		this.userFirstName = userFirstName;</span>
+<span class="fc" id="L31">		this.userLastName = userLastName;</span>
+		
+<span class="fc" id="L33">	}</span>
+	public User( String userName, String userPassword, String userFirstName, String userLastName) {
+<span class="fc" id="L35">		super();</span>
+<span class="fc" id="L36">		this.userName = userName;</span>
+<span class="fc" id="L37">		this.userPassword = userPassword;</span>
+<span class="fc" id="L38">		this.userFirstName = userFirstName;</span>
+<span class="fc" id="L39">		this.userLastName = userLastName;</span>
+<span class="fc" id="L40">	}</span>
+	
+	public Integer getUserId() {
+<span class="fc" id="L43">		return userId;</span>
+	}
+	public void setUserId(Integer userId) {
+<span class="nc" id="L46">		this.userId = userId;</span>
+<span class="nc" id="L47">	}</span>
+	public String getUserName() {
+<span class="fc" id="L49">		return userName;</span>
+	}
+	public void setUserName(String userName) {
+<span class="nc" id="L52">		this.userName = userName;</span>
+<span class="nc" id="L53">	}</span>
+	public String getUserPassword() {
+<span class="fc" id="L55">		return userPassword;</span>
+	}
+	public void setUserPassword(String userPassword) {
+<span class="nc" id="L58">		this.userPassword = userPassword;</span>
+<span class="nc" id="L59">	}</span>
+	public String getUserFirstName() {
+<span class="fc" id="L61">		return userFirstName;</span>
+	}
+	public void setUserFirstName(String userFirstName) {
+<span class="nc" id="L64">		this.userFirstName = userFirstName;</span>
+<span class="nc" id="L65">	}</span>
+	public String getUserLastName() {
+<span class="fc" id="L67">		return userLastName;</span>
+	}
+	public void setUserLastName(String userLastName) {
+<span class="nc" id="L70">		this.userLastName = userLastName;</span>
+<span class="nc" id="L71">	}</span>
+	
+	public boolean isLoggedIn() {
+<span class="nc" id="L74">		return loggedIn;</span>
+	}
+
+	public void setLoggedIn(boolean loggedIn) {
+<span class="nc" id="L78">		this.loggedIn = loggedIn;</span>
+<span class="nc" id="L79">	}</span>
+	
+	@Override 
+	public int hashCode() {
+<span class="nc" id="L83">		final int prime = 31;</span>
+<span class="nc" id="L84">		int result = 1;</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">		result = prime * result + ((userFirstName == null) ? 0 : userFirstName.hashCode());</span>
+<span class="nc bnc" id="L86" title="All 2 branches missed.">		result = prime * result + ((userId == null) ? 0 : userId.hashCode());</span>
+<span class="nc bnc" id="L87" title="All 2 branches missed.">		result = prime * result + ((userLastName == null) ? 0 : userLastName.hashCode());</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">		result = prime * result + ((userName == null) ? 0 : userName.hashCode());</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">		result = prime * result + ((userPassword == null) ? 0 : userPassword.hashCode());</span>
+<span class="nc" id="L90">		return result;</span>
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+<span class="fc bfc" id="L95" title="All 2 branches covered.">		if (this == obj)</span>
+<span class="fc" id="L96">			return true;</span>
+<span class="pc bpc" id="L97" title="1 of 2 branches missed.">		if (obj == null)</span>
+<span class="nc" id="L98">			return false;</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">		if (getClass() != obj.getClass())</span>
+<span class="nc" id="L100">			return false;</span>
+<span class="fc" id="L101">		User other = (User) obj;</span>
+<span class="pc bpc" id="L102" title="1 of 2 branches missed.">		if (userFirstName == null) {</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">			if (other.userFirstName != null)</span>
+<span class="nc" id="L104">				return false;</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">		} else if (!userFirstName.equals(other.userFirstName))</span>
+<span class="nc" id="L106">			return false;</span>
+<span class="pc bpc" id="L107" title="1 of 2 branches missed.">		if (userId == null) {</span>
+<span class="nc bnc" id="L108" title="All 2 branches missed.">			if (other.userId != null)</span>
+<span class="nc" id="L109">				return false;</span>
+<span class="pc bpc" id="L110" title="1 of 2 branches missed.">		} else if (!userId.equals(other.userId))</span>
+<span class="fc" id="L111">			return false;</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">		if (userLastName == null) {</span>
+<span class="nc bnc" id="L113" title="All 2 branches missed.">			if (other.userLastName != null)</span>
+<span class="nc" id="L114">				return false;</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">		} else if (!userLastName.equals(other.userLastName))</span>
+<span class="nc" id="L116">			return false;</span>
+<span class="nc bnc" id="L117" title="All 2 branches missed.">		if (userName == null) {</span>
+<span class="nc bnc" id="L118" title="All 2 branches missed.">			if (other.userName != null)</span>
+<span class="nc" id="L119">				return false;</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">		} else if (!userName.equals(other.userName))</span>
+<span class="nc" id="L121">			return false;</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">		if (userPassword == null) {</span>
+<span class="nc bnc" id="L123" title="All 2 branches missed.">			if (other.userPassword != null)</span>
+<span class="nc" id="L124">				return false;</span>
+<span class="nc bnc" id="L125" title="All 2 branches missed.">		} else if (!userPassword.equals(other.userPassword))</span>
+<span class="nc" id="L126">			return false;</span>
+<span class="nc" id="L127">		return true;</span>
+	}
+
+	@Override
+	public String toString() {
+		
+<span class="fc" id="L133">		return &quot;User [userId=&quot; + userId + &quot;, userName=&quot; + userName + &quot;, userPassword=&quot; + userPassword</span>
+<span class="fc" id="L134">				+ &quot;, userFirstName=&quot; + userFirstName + &quot;, userLastName=&quot; + userLastName +&quot;]&quot;;</span>
+	}
+
+	public List&lt;Account&gt; getAccounts() {
+<span class="nc" id="L138">		return accounts;</span>
+	}
+
+	public void setAccounts(List&lt;Account&gt; accounts) {
+<span class="nc" id="L142">		this.accounts = accounts;</span>
+<span class="nc" id="L143">	}</span>
+	public void addAccount(Account account) {
+<span class="nc" id="L145">		this.accounts.add(account);</span>
+<span class="nc" id="L146">	}</span>
+
+	
+	
+	
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
